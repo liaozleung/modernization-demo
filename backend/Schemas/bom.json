@@ -1,0 +1,31 @@
+{
+  "kind": "master-detail",
+  "title": "物料清单 (BOM)",
+  "permission": "BOM",
+  "master": {
+    "table": "bom_h",
+    "primaryKey": "bh_ptno",
+    "fields": [
+      { "name": "bh_ptno",     "label": "成品物料号", "type": "lookup",   "lookupTable": "part", "lookupKey": "pt_no", "lookupLabel": "pt_desc", "width": 160, "required": true, "primary": true },
+      { "name": "pt_desc",     "label": "物料描述",   "type": "string",   "width": 220, "readOnly": true, "computed": true },
+      { "name": "pt_spec",     "label": "规格",       "type": "string",   "width": 200, "readOnly": true, "computed": true },
+      { "name": "pt_unit",     "label": "单位",       "type": "string",   "width": 80,  "readOnly": true, "computed": true },
+      { "name": "bh_ver",      "label": "版本",       "type": "string",   "width": 100, "required": true },
+      { "name": "bh_dept",     "label": "部门",       "type": "string",   "width": 120 },
+      { "name": "create_date", "label": "建立日期",   "type": "datetime", "width": 180, "readOnly": true },
+      { "name": "update_date", "label": "更新日期",   "type": "datetime", "width": 180, "readOnly": true }
+    ]
+  },
+  "detail": {
+    "table": "bom_l",
+    "primaryKey": ["bl_pptno", "bl_srno"],
+    "foreignKey": { "bl_pptno": "bh_ptno" },
+    "fields": [
+      { "name": "bl_srno", "label": "序号",       "type": "number", "width": 70,  "required": true },
+      { "name": "bl_ptno", "label": "组件物料号", "type": "lookup", "lookupTable": "part", "lookupKey": "pt_no", "lookupLabel": "pt_desc", "width": 160, "required": true },
+      { "name": "bl_qty",  "label": "用量",       "type": "number", "width": 100, "required": true },
+      { "name": "bl_rate", "label": "损耗率",     "type": "number", "width": 100 },
+      { "name": "bl_loca", "label": "存放位置",   "type": "string", "width": 120 }
+    ]
+  }
+}

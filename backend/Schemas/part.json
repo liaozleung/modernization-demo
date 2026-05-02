@@ -1,0 +1,20 @@
+{
+  "kind": "master",
+  "table": "part",
+  "title": "物料档案",
+  "primaryKey": "pt_no",
+  "permission": "物料档案",
+  "fields": [
+    { "name": "pt_no",       "label": "物料编号", "type": "string",   "width": 140, "required": true,  "primary": true },
+    { "name": "pt_desc",     "label": "物料描述", "type": "string",   "width": 220, "required": true },
+    { "name": "pt_spec",     "label": "规格",     "type": "string",   "width": 200 },
+    { "name": "pt_unit",     "label": "单位",     "type": "string",   "width": 80,  "required": true },
+    { "name": "pt_type",     "label": "类型",     "type": "enum",     "width": 100, "options": ["FG","SUB","WIP","RM","PK"] },
+    { "name": "pt_category", "label": "类别",     "type": "string",   "width": 120 },
+    { "name": "pt_weight",   "label": "重量",     "type": "number",   "width": 100 },
+    { "name": "safe_stock",  "label": "安全库存", "type": "number",   "width": 100 },
+    { "name": "pt_drawno",   "label": "图号",     "type": "string",   "width": 140 },
+    { "name": "pt_rmk",      "label": "备注",     "type": "text",     "width": 240 },
+    { "name": "create_date", "label": "建立日期", "type": "datetime", "width": 180, "readOnly": true }
+  ]
+}
