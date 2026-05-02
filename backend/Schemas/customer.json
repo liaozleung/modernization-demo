@@ -1,0 +1,23 @@
+{
+  "kind": "master",
+  "table": "customer",
+  "title": "客户档案",
+  "primaryKey": "cu_code",
+  "permission": "客户档案",
+  "fields": [
+    { "name": "cu_code",       "label": "客户编号", "type": "string",   "width": 100, "required": true,  "primary": true },
+    { "name": "cu_short_name", "label": "简称",     "type": "string",   "width": 120, "required": true },
+    { "name": "cu_name",       "label": "全称",     "type": "string",   "width": 240 },
+    { "name": "cu_add",        "label": "地址",     "type": "string",   "width": 260 },
+    { "name": "cu_contact",    "label": "联系人",   "type": "string",   "width": 100 },
+    { "name": "cu_phone",      "label": "电话",     "type": "string",   "width": 140 },
+    { "name": "cu_dirphone",   "label": "直线",     "type": "string",   "width": 140 },
+    { "name": "cu_fax",        "label": "传真",     "type": "string",   "width": 140 },
+    { "name": "cu_currency",   "label": "币种",     "type": "enum",     "width": 80,  "options": ["CNY","USD","EUR","JPY","HKD"] },
+    { "name": "cu_payment",    "label": "付款方式", "type": "string",   "width": 120 },
+    { "name": "cu_term",       "label": "结算条件", "type": "string",   "width": 120 },
+    { "name": "cu_supportor",  "label": "业务员",   "type": "string",   "width": 100 },
+    { "name": "cu_tax",        "label": "税率(%)",  "type": "number",   "width": 90 },
+    { "name": "create_date",   "label": "建立日期", "type": "datetime", "width": 180, "readOnly": true }
+  ]
+}

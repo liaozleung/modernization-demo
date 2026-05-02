@@ -1,0 +1,35 @@
+{
+  "kind": "master-detail",
+  "title": "销售订单 (SO)",
+  "permission": "销售订单",
+  "master": {
+    "table": "so_h",
+    "primaryKey": "sh_no",
+    "fields": [
+      { "name": "sh_no",         "label": "订单号",     "type": "string",   "width": 160, "required": true, "primary": true },
+      { "name": "sh_cust",       "label": "客户编号",   "type": "lookup",   "lookupTable": "customer", "lookupKey": "cu_code", "lookupLabel": "cu_short_name", "width": 140, "required": true },
+      { "name": "cu_short_name", "label": "客户简称",   "type": "string",   "width": 160, "readOnly": true, "computed": true },
+      { "name": "sh_type",       "label": "类型",       "type": "enum",     "width": 100, "options": ["正常","样品","返修"] },
+      { "name": "sh_state",      "label": "状态",       "type": "enum",     "width": 100, "options": ["草稿","已审核","已下单","已交付","已结案"] },
+      { "name": "sh_date",       "label": "订单日期",   "type": "datetime", "width": 140, "required": true },
+      { "name": "creator",       "label": "建单人",     "type": "string",   "width": 100 },
+      { "name": "create_date",   "label": "建立时间",   "type": "datetime", "width": 180, "readOnly": true },
+      { "name": "update_date",   "label": "更新时间",   "type": "datetime", "width": 180, "readOnly": true }
+    ]
+  },
+  "detail": {
+    "table": "so_l",
+    "primaryKey": ["sl_no", "sl_srno"],
+    "foreignKey": { "sl_no": "sh_no" },
+    "fields": [
+      { "name": "sl_srno",     "label": "序号",       "type": "number", "width": 70,  "required": true },
+      { "name": "sl_partno",   "label": "物料编号",   "type": "lookup", "lookupTable": "part", "lookupKey": "pt_no", "lookupLabel": "pt_desc", "width": 140, "required": true },
+      { "name": "sl_po",       "label": "客户PO",     "type": "string", "width": 160 },
+      { "name": "sl_custptno", "label": "客户料号",   "type": "string", "width": 140 },
+      { "name": "sl_qty",      "label": "数量",       "type": "number", "width": 100, "required": true },
+      { "name": "sl_price",    "label": "单价",       "type": "number", "width": 100, "required": true },
+      { "name": "sl_duedate",  "label": "交期",       "type": "datetime", "width": 140 },
+      { "name": "sl_rmk",      "label": "备注",       "type": "string", "width": 160 }
+    ]
+  }
+}

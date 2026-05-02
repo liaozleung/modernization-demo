@@ -1,6 +1,51 @@
 -- T-SQL equivalent of init.sql. Use against SQL Server when you flip
 -- "Database:Provider" to "SqlServer". Field types match the VFP source schema
--- as inferred from FORMS\part.SCT and FORMS\bom.SCT (cursor schema).
+-- as inferred from FORMS\part.SCT, FORMS\bom.SCT, FORMS\customer.SCT,
+-- FORMS\so.SCT (cursor schema lines).
+
+IF OBJECT_ID('dbo.so_l','U') IS NULL
+CREATE TABLE dbo.so_l (
+    sl_no       varchar(10) NOT NULL,
+    sl_srno     int         NOT NULL,
+    sl_partno   varchar(25) NOT NULL DEFAULT(''),
+    sl_po       varchar(30) NOT NULL DEFAULT(''),
+    sl_custptno varchar(30) NOT NULL DEFAULT(''),
+    sl_qty      decimal(12,4) NOT NULL DEFAULT(0),
+    sl_price    decimal(12,4) NOT NULL DEFAULT(0),
+    sl_duedate  date        NULL,
+    sl_rmk      nvarchar(40) NOT NULL DEFAULT(''),
+    CONSTRAINT pk_so_l PRIMARY KEY (sl_no, sl_srno)
+);
+
+IF OBJECT_ID('dbo.so_h','U') IS NULL
+CREATE TABLE dbo.so_h (
+    sh_no       varchar(10)  NOT NULL PRIMARY KEY,
+    sh_cust     varchar(10)  NOT NULL DEFAULT(''),
+    sh_type     varchar(12)  NOT NULL DEFAULT(N'正常'),
+    sh_state    varchar(10)  NOT NULL DEFAULT(N'草稿'),
+    sh_date     date         NOT NULL DEFAULT(GETDATE()),
+    creator     varchar(16)  NOT NULL DEFAULT(''),
+    create_date datetime     NOT NULL DEFAULT(GETDATE()),
+    update_date datetime     NOT NULL DEFAULT(GETDATE())
+);
+
+IF OBJECT_ID('dbo.customer','U') IS NULL
+CREATE TABLE dbo.customer (
+    cu_code       varchar(10)   NOT NULL PRIMARY KEY,
+    cu_name       nvarchar(80)  NOT NULL DEFAULT(''),
+    cu_short_name nvarchar(20)  NOT NULL DEFAULT(''),
+    cu_add        nvarchar(120) NOT NULL DEFAULT(''),
+    cu_phone      varchar(40)   NOT NULL DEFAULT(''),
+    cu_dirphone   varchar(40)   NOT NULL DEFAULT(''),
+    cu_fax        varchar(40)   NOT NULL DEFAULT(''),
+    cu_contact    nvarchar(40)  NOT NULL DEFAULT(''),
+    cu_currency   varchar(8)    NOT NULL DEFAULT('CNY'),
+    cu_payment    nvarchar(40)  NOT NULL DEFAULT(''),
+    cu_term       nvarchar(40)  NOT NULL DEFAULT(''),
+    cu_supportor  nvarchar(20)  NOT NULL DEFAULT(''),
+    cu_tax        decimal(5,2)  NOT NULL DEFAULT(0),
+    create_date   datetime      NOT NULL DEFAULT(GETDATE())
+);
 
 IF OBJECT_ID('dbo.bom_l','U') IS NULL
 CREATE TABLE dbo.bom_l (

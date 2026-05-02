@@ -1,4 +1,3 @@
-using System.Text.Json;
 using LeungyouErp.Api.Data;
 using Dapper;
 
@@ -26,15 +25,21 @@ public static class SchemaEndpoints
         {
             var (selectSql, keyCol, labelCol) = table.ToLowerInvariant() switch
             {
-                "part" => ("select pt_no as value, pt_desc as label, pt_spec, pt_unit from part", "pt_no", "pt_desc"),
+                "part" => ("select pt_no as value, pt_desc as label, pt_spec, pt_unit from part",
+                           "pt_no", "pt_desc"),
+                "customer" => ("select cu_code as value, cu_short_name as label, cu_name from customer",
+                               "cu_code", "cu_short_name"),
                 _ => (null!, null!, null!)
             };
             if (selectSql is null) return Results.BadRequest(new { error = $"lookup '{table}' not allowed" });
 
             using var conn = factory.Open();
+            var (top, limit) = factory.Provider == "SqlServer" ? (" top 50", "") : ("", " limit 50");
+            // selectSql starts with "select"; inject TOP after it for SQL Server.
+            var sel = selectSql.Replace("select ", $"select{top} ");
             var sql = string.IsNullOrWhiteSpace(q)
-                ? $"{selectSql} order by {keyCol} limit 50"
-                : $"{selectSql} where {keyCol} like @q or {labelCol} like @q order by {keyCol} limit 50";
+                ? $"{sel} order by {keyCol}{limit}"
+                : $"{sel} where {keyCol} like @q or {labelCol} like @q order by {keyCol}{limit}";
             var rows = await conn.QueryAsync(sql, new { q = $"%{q}%" });
             return Results.Ok(rows);
         });

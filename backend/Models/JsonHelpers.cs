@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text.Json;
 
-namespace LeungyouErp.Api.Endpoints;
+namespace LeungyouErp.Api;
 
-internal static class JsonHelpers
+public static class JsonHelpers
 {
     public static string? AsString(object? v) => v switch
     {
