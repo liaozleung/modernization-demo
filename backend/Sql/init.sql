@@ -16,8 +16,25 @@ CREATE TABLE IF NOT EXISTS part (
     safe_stock   REAL NOT NULL DEFAULT 0,
     pt_drawno    TEXT NOT NULL DEFAULT '',
     pt_rmk       TEXT NOT NULL DEFAULT '',
+    pt_state     TEXT NOT NULL DEFAULT '未审核',
+    auditor      TEXT NOT NULL DEFAULT '',
     create_date  TEXT NOT NULL DEFAULT (datetime('now'))
 );
+-- Migrate existing DB files that predate pt_state / auditor
+ALTER TABLE part ADD COLUMN IF NOT EXISTS pt_state TEXT NOT NULL DEFAULT '未审核';
+ALTER TABLE part ADD COLUMN IF NOT EXISTS auditor  TEXT NOT NULL DEFAULT '';
+
+-- Category tree — used for pt_category validation (empty = skip validation in dev)
+CREATE TABLE IF NOT EXISTS categorytree (
+    id_no    INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullpath TEXT NOT NULL UNIQUE,
+    parent   TEXT NOT NULL DEFAULT ''
+);
+INSERT OR IGNORE INTO categorytree (fullpath, parent) VALUES
+    ('成品',   ''),
+    ('半成品',  ''),
+    ('原料',   ''),
+    ('包装',   '');
 
 -- ============================================================================
 -- BOM (1对多) — referenced from FORMS/bom.scx

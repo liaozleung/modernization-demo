@@ -69,15 +69,22 @@ CREATE TABLE dbo.bom_h (
 
 IF OBJECT_ID('dbo.part','U') IS NULL
 CREATE TABLE dbo.part (
-    pt_no       varchar(20)  NOT NULL PRIMARY KEY,
+    pt_no       varchar(20)   NOT NULL PRIMARY KEY,
     pt_desc     nvarchar(110) NOT NULL DEFAULT(''),
     pt_spec     nvarchar(110) NOT NULL DEFAULT(''),
-    pt_unit     varchar(6)   NOT NULL DEFAULT(''),
-    pt_type     varchar(10)  NOT NULL DEFAULT(''),
-    pt_category nvarchar(40) NOT NULL DEFAULT(''),
+    pt_unit     varchar(6)    NOT NULL DEFAULT(''),
+    pt_type     varchar(10)   NOT NULL DEFAULT(''),
+    pt_category nvarchar(40)  NOT NULL DEFAULT(''),
     pt_weight   decimal(12,4) NOT NULL DEFAULT(0),
     safe_stock  decimal(12,4) NOT NULL DEFAULT(0),
-    pt_drawno   varchar(40)  NOT NULL DEFAULT(''),
+    pt_drawno   varchar(40)   NOT NULL DEFAULT(''),
     pt_rmk      nvarchar(255) NOT NULL DEFAULT(''),
-    create_date datetime     NOT NULL DEFAULT(GETDATE())
+    pt_state    varchar(10)   NOT NULL DEFAULT(N'未审核'),
+    auditor     varchar(10)   NOT NULL DEFAULT(''),
+    create_date datetime      NOT NULL DEFAULT(GETDATE())
 );
+-- Migrate existing SQL Server installations (VFP system already has pt_state/auditor)
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('part') AND name='pt_state')
+    ALTER TABLE part ADD pt_state varchar(10) NOT NULL DEFAULT(N'未审核');
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('part') AND name='auditor')
+    ALTER TABLE part ADD auditor varchar(10) NOT NULL DEFAULT('');

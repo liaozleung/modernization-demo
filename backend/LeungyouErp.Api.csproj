@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Schemas\**\*.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Sql\**\*.sql" CopyToOutputDirectory="PreserveNewest" />
+    <Content Update="Schemas\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Update="Sql\**\*.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

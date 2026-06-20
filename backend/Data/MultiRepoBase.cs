@@ -102,7 +102,7 @@ public abstract class MultiRepoBase(IDbFactory factory) : IMasterDetailRepositor
             {
                 var lRow = NormalizeLine(raw);
                 lRow[LParentRef] = key;
-                lRow[LSrNo] = JsonHelpers.AsInt(raw.GetValueOrDefault(LSrNo)) ?? srno;
+                lRow[LSrNo] = JsonHelpers.AsInt(raw.TryGetValue(LSrNo, out var snv) ? snv : null) ?? srno;
                 await conn.ExecuteAsync($"INSERT INTO {LTable} ({lCols}) VALUES ({lVals})", lRow, tx);
                 srno++;
             }
@@ -143,9 +143,9 @@ public abstract class MultiRepoBase(IDbFactory factory) : IMasterDetailRepositor
         IDictionary<string, object?> raw, string[] strs, string[] nums, string[] dates)
     {
         var dict = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-        foreach (var k in strs)  dict[k] = JsonHelpers.AsString(raw.GetValueOrDefault(k))  ?? "";
-        foreach (var k in nums)  dict[k] = JsonHelpers.AsDecimal(raw.GetValueOrDefault(k)) ?? 0m;
-        foreach (var k in dates) dict[k] = JsonHelpers.AsString(raw.GetValueOrDefault(k));
+        foreach (var k in strs)  dict[k] = JsonHelpers.AsString(raw.TryGetValue(k, out var sv) ? sv : null)  ?? "";
+        foreach (var k in nums)  dict[k] = JsonHelpers.AsDecimal(raw.TryGetValue(k, out var nv) ? nv : null) ?? 0m;
+        foreach (var k in dates) dict[k] = JsonHelpers.AsString(raw.TryGetValue(k, out var dv) ? dv : null);
         return dict;
     }
 

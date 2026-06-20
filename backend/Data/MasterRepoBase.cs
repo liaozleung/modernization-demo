@@ -41,7 +41,7 @@ public abstract class MasterRepoBase(IDbFactory factory) : IMasterRepository
         return await ExecGetByKeyAsync(c, key);
     }
 
-    public async Task<dynamic?> InsertAsync(IDictionary<string, object?> rawBody)
+    public virtual async Task<dynamic?> InsertAsync(IDictionary<string, object?> rawBody)
     {
         var row = Normalize(rawBody);
         var cols = string.Join(", ", AllFields);
@@ -51,7 +51,7 @@ public abstract class MasterRepoBase(IDbFactory factory) : IMasterRepository
         return await ExecGetByKeyAsync(c, (string)row[PrimaryKey]!);
     }
 
-    public async Task<dynamic?> UpdateAsync(string key, IDictionary<string, object?> rawBody)
+    public virtual async Task<dynamic?> UpdateAsync(string key, IDictionary<string, object?> rawBody)
     {
         var row = Normalize(rawBody);
         row[PrimaryKey] = key;
@@ -73,9 +73,9 @@ public abstract class MasterRepoBase(IDbFactory factory) : IMasterRepository
     protected virtual Dictionary<string, object?> Normalize(IDictionary<string, object?> raw)
     {
         var dict = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-        foreach (var k in StrFields)  dict[k] = JsonHelpers.AsString(raw.GetValueOrDefault(k))  ?? "";
-        foreach (var k in NumFields)  dict[k] = JsonHelpers.AsDecimal(raw.GetValueOrDefault(k)) ?? 0m;
-        foreach (var k in DateFields) dict[k] = JsonHelpers.AsString(raw.GetValueOrDefault(k));   // ISO string; let provider convert
+        foreach (var k in StrFields)  dict[k] = JsonHelpers.AsString(raw.TryGetValue(k, out var sv) ? sv : null)  ?? "";
+        foreach (var k in NumFields)  dict[k] = JsonHelpers.AsDecimal(raw.TryGetValue(k, out var nv) ? nv : null) ?? 0m;
+        foreach (var k in DateFields) dict[k] = JsonHelpers.AsString(raw.TryGetValue(k, out var dv) ? dv : null);   // ISO string; let provider convert
         return dict;
     }
 

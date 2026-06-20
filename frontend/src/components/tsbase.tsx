@@ -122,6 +122,11 @@ export interface TsBaseListProps {
   /** Per-row "edit" trigger (modal trigger or drawer-open link). */
   editAction: (row: Row) => ReactNode;
 
+  /** Currently selected row's primary key value — highlighted in the table. */
+  selectedKey?: string;
+  /** Called when the user clicks a data row. */
+  onRowClick?: (row: Row) => void;
+
   // Inherited from TsBaseFormProps:
   onBeforeDelete?: TsBaseFormProps['onBeforeDelete'];
   onAfterDelete?:  TsBaseFormProps['onAfterDelete'];
@@ -167,6 +172,13 @@ export function TsBaseList(props: TsBaseListProps) {
       headerTitle={handle.title}
       search={{ labelWidth: 'auto' }}
       pagination={{ pageSize: 20 }}
+      rowClassName={(row) =>
+        String(row[primaryKey]) === props.selectedKey ? 'ant-table-row-selected' : ''
+      }
+      onRow={(row) => ({
+        onClick: () => props.onRowClick?.(row),
+        style: props.onRowClick ? { cursor: 'pointer' } : undefined,
+      })}
       request={async (params) => {
         const q = (params[primaryKey] || (params as any).keyword || '') as string;
         const rows = await api.get<Row[]>(`${requestUrl}${q ? `?q=${encodeURIComponent(q)}` : ''}`);
